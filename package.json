@@ -1,0 +1,25 @@
+{
+  "name": "discord-poker",
+  "version": "1.0.0",
+  "description": "A bot to play Texas Hold 'em in Discord.",
+  "main": "app.js",
+  "repository": "https://github.com/Joimer/discord-poker",
+  "scripts": {
+    "start": "npm run build && node build/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf ./build && tsc"
+  },
+  "author": "Juanma Serrano",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^13.13.2",
+    "nodemon": "^2.0.3",
+    "rimraf": "^3.0.2",
+    "ts-node": "^8.9.0",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "@typeit/discord": "^2.0.9",
+    "reflect-metadata": "^0.1.13"
+  }
+}
