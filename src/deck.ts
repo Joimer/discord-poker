@@ -7,7 +7,7 @@ export class Deck {
     shuffleStrategy: ShuffleStrategy;
 
     constructor(cards: Array<Card>, shuffleStrategy: ShuffleStrategy) {
-        this.cards = new Array<Card>();
+        this.cards = cards;
         this.pulled = new Array<Card>();
         this.shuffleStrategy = shuffleStrategy;
     }
@@ -17,7 +17,11 @@ export class Deck {
     }
 
     hasCards(): boolean {
-        return this.cards.length > 0;
+        return this.count() > 0;
+    }
+
+    count(): number {
+        return this.cards.length;
     }
 
     /**
