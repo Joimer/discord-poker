@@ -4,6 +4,7 @@ import { Game } from '../src/game';
 import { DeckFactory } from '../src/deck-factory';
 import { Player } from '../src/player';
 import { GameState } from '../src/game-state';
+import { RoundState } from '../src/round-state';
 
 describe('getPokerDeck', () => {
     const deck = DeckFactory.getPokerDeck();
@@ -25,14 +26,15 @@ describe('getPokerDeck', () => {
         const game = new Game(deck);
         game.join(player1);
         game.join(player2);
-        game.checkState();
-        expect(game.getState()).to.equal(GameState.READY);
+        game.setReady();
+        expect(game.getState()).to.eql(GameState.READY);
     });
 
     it('should start the game and set the round state to blinds', () => {
         const game = new Game(deck);
         game.joinMany([player1, player2, player3, player4, player5, player6, player7, player8]);
-        game.checkState();
+        game.setReady();
         game.start();
+        expect(game.getRoundState()).to.eql(RoundState.BLINDS);
     });
 });
