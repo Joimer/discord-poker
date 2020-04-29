@@ -37,4 +37,44 @@ describe('getPokerDeck', () => {
         game.start();
         expect(game.getRoundState()).to.eql(RoundState.BLINDS);
     });
+
+    it('should assign the dealer, blind, and small blind consecutively', () => {
+        const game = new Game(deck);
+        game.joinMany([player1, player2, player3, player4, player5, player6, player7, player8]);
+        game.setReady();
+        game.start();
+        let dealer = game.getDealer();
+        let blind = game.getBlind();
+        let smallBlind = game.getSmallBlind();
+        expect(game.nextPlayerTo(dealer)).to.eql(blind);
+        expect(game.nextPlayerTo(blind)).to.eql(smallBlind);
+    });
+
+    it('hole cards', () => {
+
+    });
+
+    it('flop', () => {
+
+    });
+
+    it('turn', () => {
+
+    });
+
+    it('river', () => {
+
+    });
+
+    it('winner of round', () => {
+
+    });
+
+    it('player without money out', () => {
+
+    });
+
+    it('winner of the game', () => {
+
+    });
 });
