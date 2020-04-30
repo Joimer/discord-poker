@@ -5,6 +5,8 @@ import { DeckFactory } from '../src/deck-factory';
 import { Player } from '../src/player';
 import { GameState } from '../src/game-state';
 import { RoundState } from '../src/round-state';
+import { Card } from '../src/card';
+import { CardSuit } from '../src/card-suit';
 
 describe('getPokerDeck', () => {
     const deck = DeckFactory.getPokerDeck();
@@ -38,20 +40,45 @@ describe('getPokerDeck', () => {
         expect(game.getRoundState()).to.eql(RoundState.BLINDS);
     });
 
-    it('should assign the dealer, blind, and small blind consecutively', () => {
+    it('should assign the dealer, blind, and small blind', () => {
         const game = new Game(deck);
         game.joinMany([player1, player2, player3, player4, player5, player6, player7, player8]);
         game.setReady();
         game.start();
-        let dealer = game.getDealer();
-        let blind = game.getBlind();
-        let smallBlind = game.getSmallBlind();
-        expect(game.nextPlayerTo(dealer)).to.eql(blind);
-        expect(game.nextPlayerTo(blind)).to.eql(smallBlind);
+        const dealer = game.getDealer();
+        const blind = game.getBlind();
+        const smallBlind = game.getSmallBlind();
+        expect(game.nextPlayerTo(dealer)).to.eql(smallBlind);
+        expect(game.nextPlayerTo(smallBlind)).to.eql(blind);
+        expect(blind.getChips()).to.eql(game.chips - game.blind);
+        expect(smallBlind.getChips()).to.eql(game.chips - game.blind / 2);
     });
 
-    it('hole cards', () => {
+    it('in hole cards step every player should be dealt 2 cards', () => {
+        const game = new Game(deck);
+        game.joinMany([player1, player2, player3, player4, player5, player6, player7, player8]);
+        game.setReady();
+        game.start();
+        game.deal();
+        game.deal();
+        expect(game.deck.count()).to.eql(34);
+        expect(game.getDealer().getHandCards().length).to.eql(2);
+    });
 
+    it('round should end if no player bets', () => {
+        const game = new Game(deck);
+        const players = [player1, player2, player3, player4, player5, player6, player7, player8];
+        game.joinMany(players);
+        game.setReady();
+        game.start();
+        game.deal();
+        game.deal();
+        for (let player of players) {
+            game.fold(player);
+        }
+        game.finishRound();
+        expect(game.turn).to.eql(2);
+        expect(game.roundState).to.eql(RoundState.FLOP);
     });
 
     it('flop', () => {
@@ -75,6 +102,28 @@ describe('getPokerDeck', () => {
     });
 
     it('winner of the game', () => {
-
+        const game = new Game(deck);
+        const players = [player1, player2];
+        game.joinMany(players);
+        game.start();
+        game.deal();
+        game.deal();
+        const blind = game.getBlind();
+        const smallBlind = game.getSmallBlind();
+        game.raise(blind, 2000);
+        game.raise(smallBlind, 2000);
+        blind.hand = new Array<Card>();
+        blind.hand.push(new Card(CardSuit.CLOVER, '2'));
+        blind.hand.push(new Card(CardSuit.HEART, '3'));
+        smallBlind.hand = new Array<Card>();
+        smallBlind.hand.push(new Card(CardSuit.DIAMOND, '1'));
+        smallBlind.hand.push(new Card(CardSuit.SPADES, '1'));
+        game.tableCards = new Array<Card>();
+        game.tableCards.push(new Card(CardSuit.CLOVER, '1'));
+        game.tableCards.push(new Card(CardSuit.HEART, '1'));
+        game.tableCards.push(new Card(CardSuit.DIAMOND, '2'));
+        game.finishRound();
+        game.finish();
+        expect(game.winner).to.eql(smallBlind);
     });
 });

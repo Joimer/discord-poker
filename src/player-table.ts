@@ -19,7 +19,7 @@ export class PlayerTable {
         return this.getPlayer(this.turn);
     }
 
-    getBlind(): Player {
+    getSmallBlind(): Player {
         let nextTurn = this.turn + 1;
         if (nextTurn === this.players.length) {
             nextTurn = 0;
@@ -27,7 +27,7 @@ export class PlayerTable {
         return this.getPlayer(nextTurn);
     }
 
-    getSmallBlind(): Player {
+    getBlind(): Player {
         let nextTurn = this.turn + 2;
         if (nextTurn >= this.players.length) {
             nextTurn -= this.players.length;

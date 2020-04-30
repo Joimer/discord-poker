@@ -35,4 +35,11 @@ export class Deck {
 
         return drawn;
     }
+
+    burn(): void {
+        let card = this.cards.shift();
+        if (card) {
+            this.pulled.push();
+        }
+    }
 }

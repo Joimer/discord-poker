@@ -3,6 +3,7 @@ import { Player } from './player';
 import { GameState } from './game-state';
 import { RoundState } from './round-state';
 import { PlayerTable } from './player-table';
+import { Card } from './card';
 
 export class Game {
 
@@ -16,6 +17,7 @@ export class Game {
     chips: number;
     blindIncreaseTurns: number;
     playerTable: PlayerTable;
+    tableCards: Array<Card> = new Array<Card>();
 
     constructor(deck: Deck) {
         this.deck = deck;
@@ -69,6 +71,7 @@ export class Game {
         }
         this.roundState = RoundState.BLINDS;
         this.gameState = GameState.READY;
+        this.turn = 1;
     }
 
     getDealer(): Player {
@@ -85,5 +88,34 @@ export class Game {
 
     nextPlayerTo(player: Player) : Player {
         return this.playerTable.nextPlayerTo(player);
+    }
+
+    burn(): void {
+        this.deck.burn();
+    }
+
+    // Deals one card from the deck to each player.
+    deal(): void {
+
+    }
+
+    check(player: Player): void {
+
+    }
+
+    raise(player: Player, quantity: number): void {
+        
+    }
+
+    fold(player: Player): void {
+        
+    }
+
+    finishRound(): void {
+        this.turn++;
+    }
+
+    finish(): void {
+        
     }
 }
