@@ -1,0 +1,4 @@
+{ 
+    "token"  : "discord-api-token",
+    "prefix" : "p!"
+}
