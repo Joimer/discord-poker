@@ -18,6 +18,7 @@ export class Game {
     blindIncreaseTurns: number;
     playerTable: PlayerTable;
     tableCards: Array<Card> = new Array<Card>();
+    winner: Player | null = null;
 
     constructor(deck: Deck) {
         this.deck = deck;
@@ -116,6 +117,6 @@ export class Game {
     }
 
     finish(): void {
-        
+
     }
 }

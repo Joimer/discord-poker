@@ -1,5 +1,5 @@
 import { Player } from './player';
-import { FisherYates } from './shuffle/fisher-yates';
+import { fisherYates } from './shuffle/fisher-yates';
 
 export class PlayerTable {
 
@@ -7,8 +7,7 @@ export class PlayerTable {
     players: Array<Player>;
 
     constructor(players: Array<Player>) {
-        let shuffler = new FisherYates();
-        this.players = shuffler.shuffle(players);
+        this.players = fisherYates(players);
     }
 
     getPlayer(turn: number): Player {

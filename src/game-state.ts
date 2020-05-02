@@ -1,4 +1,4 @@
-export enum GameState {
+export const enum GameState {
     NOT_READY,
     READY,
     STARTED,

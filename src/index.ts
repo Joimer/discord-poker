@@ -1,6 +1,6 @@
 import { Game } from "./game";
 import { Deck } from './deck';
-import { FisherYates } from './shuffle/fisher-yates';
+import { fisherYates } from './shuffle/fisher-yates';
 import { Card } from './card';
 import fs from 'fs';
 
@@ -10,7 +10,7 @@ if (!fs.existsSync('./config.json')) {
 }
 
 let cards = new Array<Card>();
-let deck = new Deck(cards, new FisherYates());
+let deck = new Deck(cards, fisherYates);
 let game = new Game(deck);
 
 // Here goes the discord client (or any client because decoupling is magic!)

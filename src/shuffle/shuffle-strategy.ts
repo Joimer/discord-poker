@@ -1,3 +1,1 @@
-export interface ShuffleStrategy {
-    shuffle(cards: Array<any>): Array<any>;
-}
+export type ShuffleStrategy<T> = (cards: Array<T>) => Array<T>

@@ -4,16 +4,16 @@ import { ShuffleStrategy } from './shuffle/shuffle-strategy';
 export class Deck {
     cards: Array<Card>;
     pulled: Array<Card>;
-    shuffleStrategy: ShuffleStrategy;
+    shuffleStrategy: ShuffleStrategy<Card>;
 
-    constructor(cards: Array<Card>, shuffleStrategy: ShuffleStrategy) {
+    constructor(cards: Array<Card>, shuffleStrategy: ShuffleStrategy<Card>) {
         this.cards = cards;
         this.pulled = new Array<Card>();
         this.shuffleStrategy = shuffleStrategy;
     }
 
     shuffle(): void {
-        this.cards = this.shuffleStrategy.shuffle(this.cards);
+        this.cards = this.shuffleStrategy(this.cards);
     }
 
     hasCards(): boolean {
