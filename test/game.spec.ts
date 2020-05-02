@@ -1,7 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
 import { Game } from '../src/game';
-import { DeckFactory } from '../src/deck-factory';
+import { getPokerDeck } from '../src/deck-factory';
 import { Player } from '../src/player';
 import { GameState } from '../src/game-state';
 import { RoundState } from '../src/round-state';
@@ -9,7 +9,7 @@ import { Card } from '../src/card';
 import { CardSuit } from '../src/card-suit';
 
 describe('getPokerDeck', () => {
-    const deck = DeckFactory.getPokerDeck();
+    const deck = getPokerDeck();
     const player1 = new Player('Tachibana Hibiki');
     const player2 = new Player('Kohinata Miku');
     const player3 = new Player('Kazanari Tsubasa');
