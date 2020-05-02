@@ -2,6 +2,7 @@ import { Command } from './command';
 import { Game } from '../game';
 import { getPokerDeck } from '../deck-factory';
 import { GuildManager } from 'discord.js';
+import { Player } from '../player';
 
 export const commands = new Map<string, Command>();
 
@@ -21,7 +22,20 @@ commands.set('create', (env): string => {
 
 function startGame(game: Game): string {
     game.start();
-    return '';
+    let res = "The game has started!"
+    + "\nPlay with the commands `call`, `raise`, `fold`."
+    + "\nThe starting positions are: "
+    + game.getDealer().name + " (dealer), "
+    + game.getSmallBlind().name + " (small blind of "
+    + (game.blind / 2) + "), "
+    + game.getBlind().name + " (blind of " + game.blind + "), ";
+    let players = [];
+    for (let player of game.players.slice(2)) {
+        players.push(player.name);
+    }
+    res += players.join(', ') + ".";
+
+    return res;
 }
 
 // Join an existing game
@@ -49,18 +63,67 @@ commands.set('start', (env): string => {
 });
 
 // Call the bet
-commands.set('call', (env, content): string => {
-    return '';
+commands.set('call', (env): string => {
+    let game = env.games.get(env.gameId);
+    if (!game) {
+        return "There's no game going on in this channel.";
+    }
+    try {
+        game.call(env.player);
+        return env.player.name + " called the bet.";
+    } catch (err) {
+        return err.message;
+    }
+});
+
+// Check (accept the current bet)
+commands.set('check', (env): string => {
+    let game = env.games.get(env.gameId);
+    if (!game) {
+        return "There's no game going on in this channel.";
+    }
+    try {
+        game.check(env.player);
+        return env.player.name + " checks.";
+    } catch (err) {
+        return err.message;
+    }
 });
 
 // Fold (give up)
-commands.set('fold', (env, content): string => {
-    return '';
+commands.set('fold', (env): string => {
+    let game = env.games.get(env.gameId);
+    if (!game) {
+        return "There's no game going on in this channel.";
+    }
+    try {
+        game.fold(env.player);
+        return env.player.name + " folds.";
+    } catch (err) {
+        return err.message;
+    }
 });
 
 // Raise the current bet
 commands.set('raise', (env, content): string => {
-    return '';
+    let game = env.games.get(env.gameId);
+    if (!game) {
+        return "There's no game going on in this channel.";
+    }
+    let amount = parseInt('' + content);
+    if (isNaN(amount) || amount <= 0) {
+        return "Invalid amount to bet. You need to bet an integer number that is at least twice the blind.";
+    }
+    let increment = amount - game.currentBet(player);
+    if (increment < game.blind) {
+        return "The increment is not big enough! You need to bet an integer number that is at least twice the blind.";
+    }
+    try {
+        game.raise(env.player, amount);
+        return env.player.name + ` raised to ${amount}.`;
+    } catch (err) {
+        return err.message;
+    }
 });
 
 // Force end the game

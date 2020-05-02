@@ -100,6 +100,10 @@ export class Game {
 
     }
 
+    call(player: Player): void {
+
+    }
+
     check(player: Player): void {
 
     }
@@ -118,5 +122,10 @@ export class Game {
 
     finish(): void {
 
+    }
+
+    currentBet(player: Player): number {
+        // For testing and so on, TODO
+        return this.blind;
     }
 }
