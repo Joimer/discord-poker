@@ -59,6 +59,9 @@ commands.set('start', (env): string => {
     if (!game) {
         return "There's no game going on in this channel.";
     }
+    if (!game.isTheirTurn(env.player)) {
+        return "";
+    }
     return startGame(game);
 });
 
@@ -67,6 +70,9 @@ commands.set('call', (env): string => {
     let game = env.games.get(env.gameId);
     if (!game) {
         return "There's no game going on in this channel.";
+    }
+    if (!game.isTheirTurn(env.player)) {
+        return "";
     }
     try {
         game.call(env.player);
@@ -82,6 +88,9 @@ commands.set('check', (env): string => {
     if (!game) {
         return "There's no game going on in this channel.";
     }
+    if (!game.isTheirTurn(env.player)) {
+        return "";
+    }
     try {
         game.check(env.player);
         return env.player.name + " checks.";
@@ -95,6 +104,9 @@ commands.set('fold', (env): string => {
     let game = env.games.get(env.gameId);
     if (!game) {
         return "There's no game going on in this channel.";
+    }
+    if (!game.isTheirTurn(env.player)) {
+        return "";
     }
     try {
         game.fold(env.player);
@@ -110,11 +122,14 @@ commands.set('raise', (env, content): string => {
     if (!game) {
         return "There's no game going on in this channel.";
     }
+    if (!game.isTheirTurn(env.player)) {
+        return "";
+    }
     let amount = parseInt('' + content);
     if (isNaN(amount) || amount <= 0) {
         return "Invalid amount to bet. You need to bet an integer number that is at least twice the blind.";
     }
-    let increment = amount - game.currentBet(player);
+    let increment = amount - game.currentBet(env.player);
     if (increment < game.blind) {
         return "The increment is not big enough! You need to bet an integer number that is at least twice the blind.";
     }

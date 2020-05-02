@@ -11,19 +11,21 @@ export class Game {
     players: Array<Player> = new Array<Player>();
     gameState: GameState = GameState.NOT_READY;
     roundState: RoundState = RoundState.NOT_READY;
+    turn: Player | null = null;
     playerLimit: number;
-    turn: number;
+    round: number;
     blind: number;
     chips: number;
     blindIncreaseTurns: number;
     playerTable: PlayerTable;
     tableCards: Array<Card> = new Array<Card>();
     winner: Player | null = null;
+    pot: number = 0;
 
     constructor(deck: Deck) {
         this.deck = deck;
         this.playerLimit = 10;
-        this.turn = 0;
+        this.round = 0;
         this.blind = 20;
         this.chips = 2000;
         this.blindIncreaseTurns = 5;
@@ -72,7 +74,7 @@ export class Game {
         }
         this.roundState = RoundState.BLINDS;
         this.gameState = GameState.READY;
-        this.turn = 1;
+        this.round = 1;
     }
 
     getDealer(): Player {
@@ -97,7 +99,16 @@ export class Game {
 
     // Deals one card from the deck to each player.
     deal(): void {
+        for (let player of this.players) {
+            let cards = this.deck.draw();
+            if (cards.length > 0) {
+                player.giveCard(cards[0]);
+            }
+        }
+    }
 
+    isTheirTurn(player: Player): boolean {
+        return this.turn === player;
     }
 
     call(player: Player): void {
@@ -117,7 +128,7 @@ export class Game {
     }
 
     finishRound(): void {
-        this.turn++;
+        this.round++;
     }
 
     finish(): void {

@@ -45,10 +45,13 @@ export const discordClient = (commands: Map<string, Function>, games: Map<string
                     return;
                 }
                 let result = command({player: player, gameId: gameId, games: games}, args[1]);
-                if (!result || result === '') {
+                if (!result) {
                     result = "Something went wrong.";
                 }
-                message.channel.send(result);
+                // Empty string means the command was wrong and ignored not to spam the channel.
+                if (result !== '') {
+                    message.channel.send(result);
+                }
             } catch (err) {
                 console.log(`An error happened while handling command ${args[0]} for game ${gameId}.`);
                 console.error(err);

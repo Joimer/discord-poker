@@ -62,7 +62,7 @@ describe('getPokerDeck', () => {
         game.deal();
         game.deal();
         expect(game.deck.count()).to.eql(34);
-        expect(game.getDealer().getHandCards().length).to.eql(2);
+        expect(game.getDealer().hand.length).to.eql(2);
     });
 
     it('round should end if no player bets', () => {
@@ -77,7 +77,7 @@ describe('getPokerDeck', () => {
             game.fold(player);
         }
         game.finishRound();
-        expect(game.turn).to.eql(2);
+        expect(game.round).to.eql(2);
         expect(game.roundState).to.eql(RoundState.FLOP);
     });
 

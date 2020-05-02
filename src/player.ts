@@ -21,7 +21,11 @@ export class Player {
         return this.chips;
     }
 
-    getHandCards(): Array<Card> {
-        return this.hand;
+    giveCard(card: Card) {
+        this.hand.push(card);
+    }
+
+    discardHand(): void {
+        this.hand = Array<Card>();
     }
 }

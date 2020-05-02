@@ -30,7 +30,11 @@ export class Deck {
     draw(number: number = 1): Array<Card> {
         let drawn = new Array<Card>();
         for (let i = 0; i < Math.min(number, this.cards.length); i++) {
-            drawn.push(this.cards[i]);
+            let card = this.cards.shift();
+            if (card) {
+                drawn.push(this.cards[i]);
+                this.pulled.push(card);
+            }
         }
 
         return drawn;
@@ -39,7 +43,7 @@ export class Deck {
     burn(): void {
         let card = this.cards.shift();
         if (card) {
-            this.pulled.push();
+            this.pulled.push(card);
         }
     }
 }
