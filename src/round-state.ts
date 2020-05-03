@@ -1,4 +1,4 @@
-export enum RoundState {
+enum RoundState {
     NOT_READY,
     BLINDS,
     HOLE_CARDS,
@@ -7,3 +7,5 @@ export enum RoundState {
     TURN,
     RIVER
 }
+
+export default RoundState;

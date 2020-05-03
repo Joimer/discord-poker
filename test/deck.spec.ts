@@ -17,8 +17,8 @@ describe('hasCards', () => {
 
     it('a deck with two cards should count 2', () => {
         const cards = new Array<Card>();
-        cards.push(new Card(CardSuit.CLOVER, '1'));
-        cards.push(new Card(CardSuit.CLOVER, '2'));
+        cards.push({suit: CardSuit.CLOVER, discriminator: '1'});
+        cards.push({suit: CardSuit.CLOVER, discriminator: '2'});
         const deck = new Deck(cards, fisherYates);
 
         expect(deck.hasCards()).to.equal(true);

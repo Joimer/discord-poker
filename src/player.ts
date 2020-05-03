@@ -1,6 +1,6 @@
-import { Card } from './card';
+import Card from './card';
 
-export class Player {
+export default class Player {
 
     id: Symbol;
     name: string;

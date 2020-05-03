@@ -1,3 +1,5 @@
-import { CommandEnvironment } from './command-environment';
+import CommandEnvironment from './command-environment';
 
-export type Command = (env: CommandEnvironment, content: string | undefined) => string;
+type Command = (env: CommandEnvironment, content: string | undefined) => string;
+
+export default Command;

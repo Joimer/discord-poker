@@ -1,8 +1,6 @@
-import { Command } from './command';
-import { Game } from '../game';
+import Command from './command';
+import Game from '../game';
 import { getPokerDeck } from '../deck-factory';
-import { GuildManager } from 'discord.js';
-import { Player } from '../player';
 
 export const commands = new Map<string, Command>();
 

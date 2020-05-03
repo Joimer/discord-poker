@@ -1,7 +1,7 @@
 import { Client, Message } from 'discord.js';
 import * as config from './config.json';
-import { Game } from './game';
-import { Player } from './player';
+import Game from './game';
+import Player from './player';
 
 // This limits the game to one game per channel per guild.
 function generateGameId(message: Message): string {

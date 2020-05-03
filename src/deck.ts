@@ -1,7 +1,7 @@
-import { Card } from './card';
-import { ShuffleStrategy } from './shuffle/shuffle-strategy';
+import Card from './card';
+import ShuffleStrategy from './shuffle/shuffle-strategy';
 
-export class Deck {
+export default class Deck {
     cards: Array<Card>;
     pulled: Array<Card>;
     shuffleStrategy: ShuffleStrategy<Card>;

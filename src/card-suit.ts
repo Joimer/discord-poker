@@ -1,6 +1,8 @@
-export const enum CardSuit {
+const enum CardSuit {
     CLOVER,
     DIAMOND,
     HEART,
     SPADES
 }
+
+export default CardSuit;

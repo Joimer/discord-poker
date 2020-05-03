@@ -1,11 +1,12 @@
-import { Deck } from './deck';
-import { Player } from './player';
-import { GameState } from './game-state';
-import { RoundState } from './round-state';
-import { PlayerTable } from './player-table';
-import { Card } from './card';
+import Deck from './deck';
+import Player from './player';
+import GameState from './game-state';
+import RoundState from './round-state';
+import PlayerTable from './player-table';
+import Card from './card';
+import TurnState from './turn-state';
 
-export class Game {
+export default class Game {
 
     deck: Deck;
     players: Array<Player> = new Array<Player>();
@@ -21,6 +22,7 @@ export class Game {
     tableCards: Array<Card> = new Array<Card>();
     winner: Player | null = null;
     pot: number = 0;
+    currentTurnStatus: Map<Player, TurnState> = new Map<Player, TurnState>();
 
     constructor(deck: Deck) {
         this.deck = deck;
@@ -56,6 +58,9 @@ export class Game {
         }
         if (this.players.length < 2) {
             throw new Error("Not enough players.");
+        }
+        for (let player of this.players) {
+            this.currentTurnStatus.set(player, TurnState.WAITING);
         }
         this.gameState = GameState.READY;
     }

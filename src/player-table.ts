@@ -1,8 +1,9 @@
-import { Player } from './player';
-import { fisherYates } from './shuffle/fisher-yates';
+import Player from './player';
+import fisherYates from './shuffle/fisher-yates';
 
-export class PlayerTable {
+export default class PlayerTable {
 
+    // Turn is the current dealer, which increments after each game round.
     turn: number = 0;
     players: Array<Player>;
 

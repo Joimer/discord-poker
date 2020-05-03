@@ -1,6 +1,5 @@
-import { CardSuit } from './card-suit';
+import CardSuit from './card-suit';
 
-export class Card {
+type Card = {readonly suit: CardSuit, readonly discriminator: string};
 
-    constructor(private readonly suit: CardSuit, private readonly discriminator: string) {}
-}
+export default Card;

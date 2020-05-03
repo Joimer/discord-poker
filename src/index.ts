@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { discordClient } from './discord-client';
-import { Game } from './game';
-import { Command } from './commands/command';
+import Game from './game';
+import Command from './commands/command';
 
 if (!fs.existsSync('./config.json')) {
     console.error('Please, copy the file config-example.json into config.json and fill the configuration values.');

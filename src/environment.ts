@@ -1,3 +1,3 @@
-export class Environment {
-    constructor(private readonly server: string, private readonly channel: string) {}
-}
+type Environment = {readonly server: string, readonly channel: string};
+
+export default Environment;
