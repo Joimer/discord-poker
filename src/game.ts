@@ -13,6 +13,7 @@ export default class Game {
     gameState: GameState = GameState.NOT_READY;
     roundState: RoundState = RoundState.NOT_READY;
     turn: Player | null = null;
+    currentTurnStatus: Map<Player, TurnState> = new Map<Player, TurnState>();
     playerLimit: number;
     round: number;
     blind: number;
@@ -22,7 +23,8 @@ export default class Game {
     tableCards: Array<Card> = new Array<Card>();
     winner: Player | null = null;
     pot: number = 0;
-    currentTurnStatus: Map<Player, TurnState> = new Map<Player, TurnState>();
+    currentHighestBet: number = 0;
+    allinQuantity: number = 0;
 
     constructor(deck: Deck) {
         this.deck = deck;
@@ -78,8 +80,17 @@ export default class Game {
             throw new Error('A game cannot begin without at least 2 players.');
         }
         this.roundState = RoundState.BLINDS;
-        this.gameState = GameState.READY;
+        this.gameState = GameState.STARTED;
+        this.turn = this.playerTable.getCurrentPlayer();
+        this.playerTable.getBlind().currentBet = this.blind;
+        this.currentHighestBet = this.blind;
+        this.playerTable.getSmallBlind().currentBet = Math.ceil(this.blind / 2);
         this.round = 1;
+    }
+
+    nextRound(): void {
+        this.roundState = RoundState.BLINDS;
+        this.round++;
     }
 
     getDealer(): Player {
@@ -92,10 +103,6 @@ export default class Game {
 
     getSmallBlind(): Player {
         return this.playerTable.getSmallBlind();
-    }
-
-    nextPlayerTo(player: Player) : Player {
-        return this.playerTable.nextPlayerTo(player);
     }
 
     burn(): void {
@@ -117,31 +124,51 @@ export default class Game {
     }
 
     call(player: Player): void {
+        let increase = this.currentHighestBet - player.currentBet;
+        if (increase > player.chips) {
+            return this.allin(player);
+        }
+        player.currentBet = this.currentHighestBet;
+        player.chips -= increase;
+        this.currentTurnStatus.set(player, TurnState.BET);
+    }
 
+    allin(player: Player): void {
+        this.allinQuantity = player.chips;
+        player.currentBet = player.chips;
+        player.chips = 0;
+    }
+
+    next(): void {
+        this.playerTable.nextTurn();
+        this.turn = this.playerTable.getCurrentPlayer();
     }
 
     check(player: Player): void {
-
+        this.currentTurnStatus.set(player, TurnState.BET);
+        this.next();
     }
 
     raise(player: Player, quantity: number): void {
-        
+        if (quantity > player.chips) {
+            throw new Error("Player doesn't have enough chips to bet this amount!");
+        }
+        player.currentBet = quantity;
+        player.chips -= quantity;
     }
 
     fold(player: Player): void {
-        
+        this.currentTurnStatus.set(player, TurnState.FOLDED);
+        player.currentBet = 0;
     }
 
     finishRound(): void {
         this.round++;
+        this.allinQuantity = 0;
+        this.currentHighestBet = 0;
     }
 
     finish(): void {
 
-    }
-
-    currentBet(player: Player): number {
-        // For testing and so on, TODO
-        return this.blind;
     }
 }

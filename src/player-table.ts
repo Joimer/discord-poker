@@ -3,62 +3,50 @@ import fisherYates from './shuffle/fisher-yates';
 
 export default class PlayerTable {
 
-    // Turn is the current dealer, which increments after each game round.
-    turn: number = 0;
-    players: Array<Player>;
+    private players: Array<Player>;
+    // Turn is the player that has to pick an action.
+    // Starts at 3 on a new game (0 dealer, 1 small blind, 2 big blind)
+    dealer: number = 0;
+    smallBlind: number = 1;
+    blind: number = 2;
+    turn: number = 3;
 
     constructor(players: Array<Player>) {
         this.players = fisherYates(players);
     }
 
-    getPlayer(turn: number): Player {
+    private getPlayer(turn: number): Player {
         return this.players[turn];
     }
 
-    getDealer(): Player {
+    getCurrentPlayer(): Player {
         return this.getPlayer(this.turn);
     }
 
+    getDealer(): Player {
+        return this.getPlayer(this.dealer);
+    }
+
     getSmallBlind(): Player {
-        let nextTurn = this.turn + 1;
-        if (nextTurn === this.players.length) {
-            nextTurn = 0;
-        }
-        return this.getPlayer(nextTurn);
+        return this.getPlayer(this.smallBlind);
     }
 
     getBlind(): Player {
-        let nextTurn = this.turn + 2;
-        if (nextTurn >= this.players.length) {
-            nextTurn -= this.players.length;
-        }
-        return this.getPlayer(nextTurn);
+        return this.getPlayer(this.blind);
     }
 
     nextTurn(): void {
-        this.turn++;
-        if (this.turn === this.players.length) {
-            this.turn = 0;
-        }
+        this.dealer = this.increaseTurn(this.dealer);
+        this.smallBlind = this.increaseTurn(this.smallBlind);
+        this.blind = this.increaseTurn(this.blind);
+        this.turn = this.increaseTurn(this.turn);
     }
 
-    nextPlayerTo(player: Player): Player {
-        let initialPlayer = -1;
-        for (let i = 0; i < this.players.length; i++) {
-            let possiblePlayer = this.players[i];
-            if (player.id === possiblePlayer.id) {
-                initialPlayer = i;
-                break;
-            }
+    private increaseTurn(turn: number): number {
+        turn++;
+        if (turn === this.players.length) {
+            turn = 0;
         }
-        if (initialPlayer === -1) {
-            throw new Error('Player not found, state missmatch.');
-        }
-        initialPlayer++;
-        if (initialPlayer === this.players.length) {
-            initialPlayer = 0;
-        }
-
-        return this.getPlayer(initialPlayer);
+        return turn;
     }
 }

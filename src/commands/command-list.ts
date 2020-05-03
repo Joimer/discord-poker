@@ -74,6 +74,7 @@ commands.set('call', (env): string => {
     }
     try {
         game.call(env.player);
+        game.next();
         return env.player.name + " called the bet.";
     } catch (err) {
         return err.message;
@@ -127,7 +128,7 @@ commands.set('raise', (env, content): string => {
     if (isNaN(amount) || amount <= 0) {
         return "Invalid amount to bet. You need to bet an integer number that is at least twice the blind.";
     }
-    let increment = amount - game.currentBet(env.player);
+    let increment = amount - env.player.currentBet;
     if (increment < game.blind) {
         return "The increment is not big enough! You need to bet an integer number that is at least twice the blind.";
     }
