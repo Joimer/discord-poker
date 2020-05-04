@@ -28,7 +28,7 @@ function startGame(game: Game): string {
     + (game.blind / 2) + "), "
     + game.getBlind().name + " (blind of " + game.blind + "), ";
     let players = [];
-    for (let player of game.players.slice(2)) {
+    for (let player of game.playerTable.getAll().slice(2)) {
         players.push(player.name);
     }
     res += players.join(', ') + ".";
@@ -45,7 +45,7 @@ commands.set('join', (env): string => {
     game.join(env.player);
     let res = `${env.player.name} has joined the game.`;
     // Magic number, config?
-    if (game.players.length === 10) {
+    if (game.playerTable.count() === 10) {
         res += "\n" + startGame(game);
     }
     return res;

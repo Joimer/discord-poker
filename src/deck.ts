@@ -24,6 +24,10 @@ export default class Deck {
         return this.cards.length;
     }
 
+    total(): number {
+        return this.cards.length + this.pulled.length;
+    }
+
     /**
      * Returns the required number of cards, if any.
      */

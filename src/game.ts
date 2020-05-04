@@ -9,7 +9,6 @@ import TurnState from './turn-state';
 export default class Game {
 
     deck: Deck;
-    players: Array<Player> = new Array<Player>();
     gameState: GameState = GameState.NOT_READY;
     roundState: RoundState = RoundState.NOT_READY;
     turn: Player | null = null;
@@ -33,7 +32,7 @@ export default class Game {
         this.blind = 20;
         this.chips = 2000;
         this.blindIncreaseTurns = 5;
-        this.playerTable = new PlayerTable(this.players);
+        this.playerTable = new PlayerTable(new Array<Player>());
     }
 
     isReady(): boolean {
@@ -41,11 +40,12 @@ export default class Game {
     }
 
     join(player: Player): void {
-        if (this.players.length === this.playerLimit) {
+        if (this.playerTable.count() === this.playerLimit) {
             // The max is 10 usually, the recommended is 6 to 8, even if it can be played from 2 upwards.
             throw new Error(`The maximum number of players is ${this.playerLimit}.`);
         }
-        this.players.push(player);
+        this.playerTable.add(player);
+        player.chips = this.chips;
     }
 
     joinMany(players: Array<Player>): void {
@@ -58,17 +58,14 @@ export default class Game {
         if (this.gameState !== GameState.NOT_READY) {
             throw new Error("This game was already set ready!");
         }
-        if (this.players.length < 2) {
+        if (this.playerTable.count() < 2) {
             throw new Error("Not enough players.");
         }
-        for (let player of this.players) {
+        for (let player of this.playerTable.getAll()) {
             this.currentTurnStatus.set(player, TurnState.WAITING);
         }
+        this.playerTable.prepareTable();
         this.gameState = GameState.READY;
-    }
-
-    getState(): GameState {
-        return this.gameState;
     }
 
     getRoundState(): RoundState {
@@ -76,21 +73,30 @@ export default class Game {
     }
 
     start(): void {
-        if (this.players.length < 2) {
+        if (this.gameState !== GameState.READY) {
+            throw new Error('Game is not ready to be started.');
+        }
+        if (this.playerTable.count() < 2) {
             throw new Error('A game cannot begin without at least 2 players.');
         }
         this.roundState = RoundState.BLINDS;
         this.gameState = GameState.STARTED;
         this.turn = this.playerTable.getCurrentPlayer();
-        this.playerTable.getBlind().currentBet = this.blind;
+        const blind = this.playerTable.getBlind();
+        blind.currentBet = this.blind;
+        blind.chips -= this.blind;
         this.currentHighestBet = this.blind;
-        this.playerTable.getSmallBlind().currentBet = Math.ceil(this.blind / 2);
+        const smallBlind = this.playerTable.getSmallBlind();
+        smallBlind.currentBet = Math.ceil(this.blind / 2);
+        smallBlind.chips -= Math.ceil(this.blind / 2);
         this.round = 1;
     }
 
     nextRound(): void {
         this.roundState = RoundState.BLINDS;
         this.round++;
+        this.allinQuantity = 0;
+        this.currentHighestBet = 0;
     }
 
     getDealer(): Player {
@@ -111,7 +117,7 @@ export default class Game {
 
     // Deals one card from the deck to each player.
     deal(): void {
-        for (let player of this.players) {
+        for (let player of this.playerTable.getAll()) {
             let cards = this.deck.draw();
             if (cards.length > 0) {
                 player.giveCard(cards[0]);
@@ -160,12 +166,6 @@ export default class Game {
     fold(player: Player): void {
         this.currentTurnStatus.set(player, TurnState.FOLDED);
         player.currentBet = 0;
-    }
-
-    finishRound(): void {
-        this.round++;
-        this.allinQuantity = 0;
-        this.currentHighestBet = 0;
     }
 
     finish(): void {

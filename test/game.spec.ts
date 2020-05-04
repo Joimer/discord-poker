@@ -8,7 +8,7 @@ import RoundState from '../src/round-state';
 import Card from '../src/card';
 import CardSuit from '../src/card-suit';
 
-describe('getPokerDeck', () => {
+describe('game class', () => {
     const deck = getPokerDeck();
     const player1 = new Player('Tachibana Hibiki');
     const player2 = new Player('Kohinata Miku');
@@ -30,7 +30,7 @@ describe('getPokerDeck', () => {
         game.join(player1);
         game.join(player2);
         game.setReady();
-        expect(game.getState()).to.eql(GameState.READY);
+        expect(game.gameState).to.eql(GameState.READY);
     });
 
     it('should start the game and set the round state to blinds', () => {
@@ -59,7 +59,7 @@ describe('getPokerDeck', () => {
         game.start();
         game.deal();
         game.deal();
-        expect(game.deck.count()).to.eql(34);
+        expect(game.deck.count()).to.eql(game.deck.total() - allPlayers.length * 2);
         expect(game.getDealer().hand.length).to.eql(2);
     });
 
@@ -68,14 +68,15 @@ describe('getPokerDeck', () => {
         game.joinMany(allPlayers);
         game.setReady();
         game.start();
+        expect(game.round).to.eql(1);
         game.deal();
         game.deal();
         for (let player of allPlayers) {
             game.fold(player);
         }
-        game.finishRound();
+        game.nextRound();
         expect(game.round).to.eql(2);
-        expect(game.roundState).to.eql(RoundState.FLOP);
+        expect(game.roundState).to.eql(RoundState.BLINDS);
     });
 
     it('flop', () => {
@@ -102,13 +103,15 @@ describe('getPokerDeck', () => {
         const game = new Game(deck);
         const players = [player1, player2];
         game.joinMany(players);
+        game.setReady();
+        console.log();
         game.start();
         game.deal();
         game.deal();
         const blind = game.getBlind();
         const smallBlind = game.getSmallBlind();
-        game.raise(blind, 2000);
-        game.raise(smallBlind, 2000);
+        game.raise(blind, 2000 - game.blind);
+        game.raise(smallBlind, 2000 - Math.ceil(game.blind / 2));
         blind.hand = new Array<Card>();
         blind.hand.push({suit: CardSuit.CLOVER, discriminator: '2'});
         blind.hand.push({suit: CardSuit.HEART, discriminator: '3'});
@@ -119,7 +122,7 @@ describe('getPokerDeck', () => {
         game.tableCards.push({suit: CardSuit.CLOVER, discriminator: '1'});
         game.tableCards.push({suit: CardSuit.HEART, discriminator: '1'});
         game.tableCards.push({suit: CardSuit.DIAMOND, discriminator: '2'});
-        game.finishRound();
+        game.nextRound();
         game.finish();
         expect(game.winner).to.eql(smallBlind);
     });
