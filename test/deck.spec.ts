@@ -16,7 +16,7 @@ describe('hasCards', () => {
 
     it('a deck with two cards should count 2', () => {
         const cards = new Array<Card>();
-        cards.push({suit: CardSuit.CLOVER, discriminator: '1'});
+        cards.push({suit: CardSuit.CLOVER, discriminator: 'A'});
         cards.push({suit: CardSuit.CLOVER, discriminator: '2'});
         const deck = new Deck(cards, fisherYates);
 

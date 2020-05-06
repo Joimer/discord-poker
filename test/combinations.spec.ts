@@ -1,24 +1,21 @@
 import 'mocha';
 import { expect } from 'chai';
-import { hasStraight, hasAnyOfAKind, hasFullHouse, hasFlush, hasRoyalFlush } from '../src/combinations';
 import Card from '../src/card';
 import CardSuit from '../src/card-suit';
+import hasRoyalFlush from '../src/combinations/royal-flush';
+import getHighCard from '../src/combinations/high-card';
+import hasStraight from '../src/combinations/straight';
+import hasAnyOfAKind from '../src/combinations/any-of-a-kind';
+import hasFullHouse from '../src/combinations/full-house';
+import hasFlush from '../src/combinations/flush';
+import hasTwoPair from '../src/combinations/two-pair';
 
 describe('card combinations', () => {
-    it('should return royal flush being there and not', () => {
+    it('royal flush', () => {
+        // Easy cases.
         let cards: Array<Card> = [
             {suit: CardSuit.CLOVER, discriminator: 'A'},
             {suit: CardSuit.CLOVER, discriminator: '10'},
-            {suit: CardSuit.CLOVER, discriminator: 'Q'},
-            {suit: CardSuit.CLOVER, discriminator: 'K'},
-            {suit: CardSuit.CLOVER, discriminator: 'J'}
-        ];
-        expect(hasRoyalFlush(cards)).to.equal(true);
-        cards = [
-            {suit: CardSuit.CLOVER, discriminator: '3'},
-            {suit: CardSuit.CLOVER, discriminator: 'A'},
-            {suit: CardSuit.CLOVER, discriminator: '10'},
-            {suit: CardSuit.CLOVER, discriminator: '5'},
             {suit: CardSuit.CLOVER, discriminator: 'Q'},
             {suit: CardSuit.CLOVER, discriminator: 'K'},
             {suit: CardSuit.CLOVER, discriminator: 'J'}
@@ -33,16 +30,6 @@ describe('card combinations', () => {
             {suit: CardSuit.CLOVER, discriminator: '2'},
             {suit: CardSuit.CLOVER, discriminator: '8'}
         ];
-        expect(hasRoyalFlush(cards)).to.equal(true);
-        cards = [
-            {suit: CardSuit.CLOVER, discriminator: '3'},
-            {suit: CardSuit.CLOVER, discriminator: 'A'},
-            {suit: CardSuit.CLOVER, discriminator: '10'},
-            {suit: CardSuit.CLOVER, discriminator: '5'},
-            {suit: CardSuit.CLOVER, discriminator: '7'},
-            {suit: CardSuit.CLOVER, discriminator: 'K'},
-            {suit: CardSuit.CLOVER, discriminator: 'J'}
-        ];
         expect(hasRoyalFlush(cards)).to.equal(false);
         cards = [
             {suit: CardSuit.CLOVER, discriminator: '3'},
@@ -54,9 +41,59 @@ describe('card combinations', () => {
             {suit: CardSuit.CLOVER, discriminator: 'J'}
         ];
         expect(hasRoyalFlush(cards)).to.equal(false);
+        cards = [
+            {suit: CardSuit.CLOVER, discriminator: 'A'},
+            {suit: CardSuit.DIAMOND, discriminator: 'A'},
+            {suit: CardSuit.HEART, discriminator: 'A'},
+            {suit: CardSuit.DIAMOND, discriminator: '10'},
+            {suit: CardSuit.DIAMOND, discriminator: 'K'},
+            {suit: CardSuit.DIAMOND, discriminator: 'Q'},
+            {suit: CardSuit.DIAMOND, discriminator: 'J'}
+        ];
+        expect(hasRoyalFlush(cards)).to.equal(true);
+        cards = [
+            {suit: CardSuit.HEART, discriminator: 'A'},
+            {suit: CardSuit.DIAMOND, discriminator: 'A'},
+            {suit: CardSuit.HEART, discriminator: 'K'},
+            {suit: CardSuit.HEART, discriminator: 'Q'},
+            {suit: CardSuit.DIAMOND, discriminator: 'Q'},
+            {suit: CardSuit.HEART, discriminator: 'J'},
+            {suit: CardSuit.HEART, discriminator: '10'}
+        ];
+        expect(hasRoyalFlush(cards)).to.equal(true);
+        cards = [
+            {suit: CardSuit.HEART, discriminator: 'A'},
+            {suit: CardSuit.DIAMOND, discriminator: 'A'},
+            {suit: CardSuit.HEART, discriminator: 'K'},
+            {suit: CardSuit.CLOVER, discriminator: 'Q'},
+            {suit: CardSuit.DIAMOND, discriminator: 'Q'},
+            {suit: CardSuit.HEART, discriminator: 'J'},
+            {suit: CardSuit.HEART, discriminator: '10'}
+        ];
+        expect(hasRoyalFlush(cards)).to.equal(false);
+        cards = [
+            {suit: CardSuit.HEART, discriminator: 'A'},
+            {suit: CardSuit.DIAMOND, discriminator: 'A'},
+            {suit: CardSuit.CLOVER, discriminator: 'A'},
+            {suit: CardSuit.DIAMOND, discriminator: 'K'},
+            {suit: CardSuit.DIAMOND, discriminator: 'Q'},
+            {suit: CardSuit.CLOVER, discriminator: 'J'},
+            {suit: CardSuit.DIAMOND, discriminator: '10'}
+        ];
+        expect(hasRoyalFlush(cards)).to.equal(false);
+        cards = [
+            {suit: CardSuit.HEART, discriminator: 'A'},
+            {suit: CardSuit.DIAMOND, discriminator: 'A'},
+            {suit: CardSuit.HEART, discriminator: 'K'},
+            {suit: CardSuit.SPADES, discriminator: 'Q'},
+            {suit: CardSuit.HEART, discriminator: 'Q'},
+            {suit: CardSuit.HEART, discriminator: 'J'},
+            {suit: CardSuit.HEART, discriminator: '10'}
+        ];
+        expect(hasRoyalFlush(cards)).to.equal(true);
     });
 
-    it('should return straight flush being there and not', () => {
+    it('straight flush', () => {
         let cards: Array<Card> = [
             {suit: CardSuit.CLOVER, discriminator: 'A'},
             {suit: CardSuit.HEART, discriminator: '10'},
@@ -64,7 +101,7 @@ describe('card combinations', () => {
             {suit: CardSuit.CLOVER, discriminator: 'K'},
             {suit: CardSuit.SPADES, discriminator: 'J'}
         ];
-        expect(hasStraight(cards, true)).to.equal(true);
+        expect(hasStraight(cards)).to.equal(true);
         cards = [
             {suit: CardSuit.CLOVER, discriminator: '3'},
             {suit: CardSuit.HEART, discriminator: 'A'},
@@ -74,7 +111,7 @@ describe('card combinations', () => {
             {suit: CardSuit.SPADES, discriminator: 'K'},
             {suit: CardSuit.CLOVER, discriminator: 'J'}
         ];
-        expect(hasStraight(cards, true)).to.equal(true);
+        expect(hasStraight(cards)).to.equal(true);
         cards = [
             {suit: CardSuit.CLOVER, discriminator: '3'},
             {suit: CardSuit.CLOVER, discriminator: '4'},
@@ -84,7 +121,7 @@ describe('card combinations', () => {
             {suit: CardSuit.CLOVER, discriminator: '2'},
             {suit: CardSuit.CLOVER, discriminator: '8'}
         ];
-        expect(hasStraight(cards, true)).to.equal(true);
+        expect(hasStraight(cards)).to.equal(true);
         cards = [
             {suit: CardSuit.CLOVER, discriminator: '3'},
             {suit: CardSuit.CLOVER, discriminator: 'A'},
@@ -94,7 +131,7 @@ describe('card combinations', () => {
             {suit: CardSuit.CLOVER, discriminator: 'K'},
             {suit: CardSuit.CLOVER, discriminator: 'J'}
         ];
-        expect(hasStraight(cards, true)).to.equal(false);
+        expect(hasStraight(cards)).to.equal(false);
     });
 
     it('should return four of a kind being there and not', () => {
@@ -135,7 +172,7 @@ describe('card combinations', () => {
         let cards: Array<Card> = [
             {suit: CardSuit.HEART, discriminator: '2'},
             {suit: CardSuit.CLOVER, discriminator: 'A'},
-            {suit: CardSuit.HEART, discriminator: 'A'},
+            {suit: CardSuit.HEART, discriminator: 'A'},        
             {suit: CardSuit.CLOVER, discriminator: '3'},
             {suit: CardSuit.SPADES, discriminator: '4'},
         ];
@@ -201,7 +238,7 @@ describe('card combinations', () => {
             {suit: CardSuit.CLOVER, discriminator: 'K'},
             {suit: CardSuit.SPADES, discriminator: 'J'}
         ];
-        expect(hasStraight(cards, false)).to.equal(true);
+        expect(hasStraight(cards)).to.equal(true);
         cards = [
             {suit: CardSuit.CLOVER, discriminator: '3'},
             {suit: CardSuit.HEART, discriminator: 'A'},
@@ -211,7 +248,7 @@ describe('card combinations', () => {
             {suit: CardSuit.SPADES, discriminator: 'K'},
             {suit: CardSuit.CLOVER, discriminator: 'J'}
         ];
-        expect(hasStraight(cards, false)).to.equal(true);
+        expect(hasStraight(cards)).to.equal(true);
         cards = [
             {suit: CardSuit.CLOVER, discriminator: '3'},
             {suit: CardSuit.CLOVER, discriminator: '4'},
@@ -221,7 +258,7 @@ describe('card combinations', () => {
             {suit: CardSuit.CLOVER, discriminator: '2'},
             {suit: CardSuit.CLOVER, discriminator: '8'}
         ];
-        expect(hasStraight(cards, false)).to.equal(true);
+        expect(hasStraight(cards)).to.equal(true);
         cards = [
             {suit: CardSuit.CLOVER, discriminator: '3'},
             {suit: CardSuit.CLOVER, discriminator: 'A'},
@@ -231,7 +268,7 @@ describe('card combinations', () => {
             {suit: CardSuit.CLOVER, discriminator: 'K'},
             {suit: CardSuit.CLOVER, discriminator: 'J'}
         ];
-        expect(hasStraight(cards, false)).to.equal(false);
+        expect(hasStraight(cards)).to.equal(false);
     });
 
     it('two pair', () => {
@@ -257,12 +294,12 @@ describe('card combinations', () => {
 
     it('get high card', () => {
         let cards: Array<Card> = [
-            {suit: CardSuit.SPADES, discriminator: 'A'},
-            {suit: CardSuit.SPADES, discriminator: '3'},
             {suit: CardSuit.SPADES, discriminator: '4'},
+            {suit: CardSuit.SPADES, discriminator: 'A'},
+            {suit: CardSuit.SPADES, discriminator: '3'},           
             {suit: CardSuit.SPADES, discriminator: '4'},
             {suit: CardSuit.HEART, discriminator: '4'},
         ];
-        expect(getHighCard(cards)).to.equal({suit: CardSuit.SPADES, discriminator 'A'});
+        expect(getHighCard(cards)).to.eql({suit: CardSuit.SPADES, discriminator: 'A'});
     });
 });

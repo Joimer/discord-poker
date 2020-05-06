@@ -168,7 +168,25 @@ export default class Game {
         player.currentBet = 0;
     }
 
-    finish(): void {
+    checkForWinner(): void {
+        let withChips = 0;
+        let possibleWinner = null;
+        for (let player of this.playerTable.getAll()) {
+            if (player.chips > 0) {
+                withChips++;
+                possibleWinner = player;
+            }
+            if (withChips > 1) {
+                break;
+            }
+        }
+        if (withChips === 1) {
+            this.winner = possibleWinner;
+            this.gameState = GameState.FINISHED;
+        }
+    }
 
+    finish(): void {
+        // TODO or to delete idk yet
     }
 }
