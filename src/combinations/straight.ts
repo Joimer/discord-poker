@@ -1,6 +1,11 @@
 import Card from '../card';
 import { orderCards, cardValue } from '../combinations';
 
+/**
+ * Straight is a five combination of cards ranked in order where the ace can be either 1 or 14.
+ * Suit is irrelevant here.
+ * @param cards 
+ */
 export default function hasStraight(cards: Array<Card>): boolean {
     if (cards.length < 5) {
         return false;
@@ -16,24 +21,17 @@ export default function hasStraight(cards: Array<Card>): boolean {
 
     for (let card of cards) {
         if (previousCard !== null) {
-            // Check first that the suit is proper.
-            // Then check values, Ace being checked after the first means it's being played as a 1.
+            // Then check values, Ace being checked after the first means it can be played as a 1.
             if (previousCard.discriminator === 'A') {
                 cards.push(previousCard);
                 aceAsOne = true;
             }
-            if (previousCard.suit !== card.suit || cardValue(previousCard) - cardValue(card, aceAsOne) > 1) {
+            if (cardValue(previousCard) - cardValue(card, aceAsOne) > 1) {
                 fails++;
-                correct = 0;
-            }
-            if (fails > failTolerance) {
-                return false;
-            }
-        } else {
-            // First card, check special case for ace (can be first in AKQJ10 or last in 5432A)
-            if (card.discriminator === 'A') {
-                cards.push(card);
-                aceAsOne = true;
+                if (fails > failTolerance) {
+                    return false;
+                }
+                continue;
             }
         }
 
