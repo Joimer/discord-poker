@@ -50,8 +50,8 @@ export default class Round {
     }
 
     next(): void {
-        this.playerTable.nextTurn();
-        this.turn = this.playerTable.getCurrentPlayer();
+        this.players.nextTurn();
+        this.currentPlay = this.players.getCurrentPlayer();
     }
 
     /**

@@ -57,8 +57,6 @@ describe('game class', () => {
         game.joinMany(allPlayers);
         game.setReady();
         game.start();
-        game.deal();
-        game.deal();
         expect(game.deck.count()).to.eql(game.deck.total() - allPlayers.length * 2);
         expect(game.getDealer().hand.length).to.eql(2);
     });
@@ -69,14 +67,12 @@ describe('game class', () => {
         game.setReady();
         game.start();
         expect(game.round).to.eql(1);
-        game.deal();
-        game.deal();
         for (let player of allPlayers) {
             game.fold(player);
         }
         game.nextRound();
         expect(game.round).to.eql(2);
-        expect(game.roundState).to.eql(RoundState.BLINDS);
+        expect(game.getRoundState()).to.eql(RoundState.BLINDS);
     });
 
     /* TODO:
