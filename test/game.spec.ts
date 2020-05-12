@@ -5,8 +5,7 @@ import { getPokerDeck } from '../src/deck-factory';
 import Player from '../src/player';
 import GameState from '../src/game-state';
 import RoundState from '../src/round-state';
-//import Card from '../src/card';
-//import CardSuit from '../src/card-suit';
+import CardSuit from '../src/card-suit';
 
 describe('game class', () => {
     const deck = getPokerDeck();
@@ -87,11 +86,29 @@ describe('game class', () => {
         expect(game.getRoundState()).to.eql(RoundState.BLINDS);
     });
 
-    /* TODO:
     it('player without money out', () => {
-
+        const game = new Game(deck);
+        game.joinMany(allPlayers);
+        game.setReady();
+        game.start();
+        let b = game.getBlind();
+        game.currentRound.blinds();
+        game.currentRound.hole();
+        for (let player of allPlayers) {
+            if (player !== b) {
+                // Technically impossible, but the game and round state do not check deck sanity.
+                player.hand = [{suit: CardSuit.HEART, discriminator: 'A'}, {suit: CardSuit.DIAMOND, discriminator: 'A'}];
+                game.call(player);
+            }
+        }
+        game.allin(b);
+        b.hand = [{suit: CardSuit.CLOVER, discriminator: '2'}, {suit: CardSuit.SPADES, discriminator: '4'}];
+        game.currentRound.calculateWinner();
+        game.nextRound();
+        game.currentRound.start();
+        expect(game.currentRound.playersInGame()).to.eql(7);
     });
-
+    /* TODO:
     it('winner of the game', () => {
         const game = new Game(deck);
         const players = [player1, player2];

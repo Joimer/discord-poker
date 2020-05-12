@@ -167,6 +167,7 @@ export default class Round {
      * @param player 
      */
     allin(player: Player): void {
+        // TODO: Implement side pots and side pot sharing after it ends.
         player.currentBet += player.chips;
         this.allinQuantity = player.currentBet;
         player.chips = 0;
@@ -233,6 +234,8 @@ export default class Round {
         }
 
         this.state = RoundState.FINISHED;
+        // Actually several can win a round and money has to be shared.
+        // Implement pot -> player.
         this.winner = competing.shift();
     }
 }
