@@ -69,16 +69,17 @@ describe('game class', () => {
         game.joinMany(allPlayers);
         game.setReady();
         game.start();
+        let b = game.getBlind();
         game.currentRound.blinds();
         game.currentRound.hole();
         expect(game.round).to.eql(1);
-        let b = game.getBlind();
         for (let player of allPlayers) {
             if (player !== b) {
                 game.fold(player);
             }
         }
         game.currentRound.calculateWinner();
+        expect(game.currentRound.winner).to.eql(b);
         game.nextRound();
         expect(game.round).to.eql(2);
         expect(game.getRoundState()).to.eql(RoundState.NOT_READY);
@@ -87,22 +88,6 @@ describe('game class', () => {
     });
 
     /* TODO:
-    it('flop', () => {
-
-    });
-
-    it('turn', () => {
-
-    });
-
-    it('river', () => {
-
-    });
-
-    it('winner of round', () => {
-
-    });
-
     it('player without money out', () => {
 
     });

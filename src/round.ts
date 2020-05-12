@@ -13,7 +13,7 @@ export default class Round {
     table = new Array<Card>();
     pot: number = 0;
     state: RoundState = RoundState.NOT_READY;
-    winner: Player|null = null;
+    winner: Player|undefined;
     currentPlay: Player|null = null;
     blind: number = 0;
     currentHighestBet: number = 0;
@@ -61,14 +61,24 @@ export default class Round {
             throw new Error("State mismatch: Cannot `hole`.");
         }
         this.currentPlay = this.players.getCurrentPlayer();
+        this.setBlind(this.players.getBlind());
+        this.currentHighestBet = this.blind;
+        this.setSmallBlind(this.players.getSmallBlind());
+        this.state = RoundState.HOLE_CARDS;
+    }
+
+    setBlind(player: Player): void {
         const blind = this.players.getBlind();
         blind.currentBet = this.blind;
         blind.chips -= this.blind;
-        this.currentHighestBet = this.blind;
+        this.players.state.set(player, TurnState.BET);
+    }
+
+    setSmallBlind(player: Player): void {
         const smallBlind = this.players.getSmallBlind();
         smallBlind.currentBet = Math.ceil(this.blind / 2);
         smallBlind.chips -= Math.ceil(this.blind / 2);
-        this.state = RoundState.HOLE_CARDS;
+        this.players.state.set(player, TurnState.BET_LOWER);
     }
 
     /**
@@ -206,7 +216,7 @@ export default class Round {
     /**
      * Gets the winner of the current hands.
      */
-    calculateWinner(): Player|undefined {
+    calculateWinner(): void {
         let competing = new Array<Player>();
         for (let [player, state] of this.players.state) {
             if (state === TurnState.BET) {
@@ -223,7 +233,6 @@ export default class Round {
         }
 
         this.state = RoundState.FINISHED;
-        
-        return competing.shift();
+        this.winner = competing.shift();
     }
 }

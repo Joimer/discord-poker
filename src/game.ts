@@ -118,7 +118,7 @@ export default class Game {
     }
 
     fold(player: Player): void {
-        this.currentRound.allin(player);
+        this.currentRound.fold(player);
     }
 
     checkForWinner(): void {
@@ -129,10 +129,8 @@ export default class Game {
                 withChips++;
                 possibleWinner = player;
             }
-            if (withChips > 1) {
-                break;
-            }
         }
+        // TODO: Actually implement this.
         if (withChips === 1) {
             this.winner = possibleWinner;
             this.gameState = GameState.FINISHED;
