@@ -46,6 +46,7 @@ describe('game class', () => {
         game.joinMany(allPlayers);
         game.setReady();
         game.start();
+        game.currentRound.blinds();
         const blind = game.getBlind();
         const smallBlind = game.getSmallBlind();
         expect(blind.chips).to.eql(game.chips - game.blind);
@@ -57,6 +58,8 @@ describe('game class', () => {
         game.joinMany(allPlayers);
         game.setReady();
         game.start();
+        game.currentRound.blinds();
+        game.currentRound.hole();
         expect(game.deck.count()).to.eql(game.deck.total() - allPlayers.length * 2);
         expect(game.getDealer().hand.length).to.eql(2);
     });
@@ -66,12 +69,20 @@ describe('game class', () => {
         game.joinMany(allPlayers);
         game.setReady();
         game.start();
+        game.currentRound.blinds();
+        game.currentRound.hole();
         expect(game.round).to.eql(1);
+        let b = game.getBlind();
         for (let player of allPlayers) {
-            game.fold(player);
+            if (player !== b) {
+                game.fold(player);
+            }
         }
+        game.currentRound.calculateWinner();
         game.nextRound();
         expect(game.round).to.eql(2);
+        expect(game.getRoundState()).to.eql(RoundState.NOT_READY);
+        game.currentRound.start();
         expect(game.getRoundState()).to.eql(RoundState.BLINDS);
     });
 

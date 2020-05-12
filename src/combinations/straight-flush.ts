@@ -14,7 +14,6 @@ export default function hasStraightFlush(cards: Array<Card>): boolean {
 
     // With 5 cards it's pretty easy.
     if (cards.length === 5) {
-        console.log("yoshi")
         return rankedAndSameSuit(cards);
     }
 

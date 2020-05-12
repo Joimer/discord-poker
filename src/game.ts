@@ -68,6 +68,10 @@ export default class Game {
         return this.currentRound.state;
     }
 
+    isTheirTurn(player: Player): boolean {
+        return this.currentRound.isTheirTurn(player);
+    }
+
     start(): void {
         if (this.gameState !== GameState.READY) {
             throw new Error('Game is not ready to be started.');

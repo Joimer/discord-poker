@@ -28,7 +28,6 @@ export default class Round {
     start(): void {
         this.players.prepareTable();
         this.state = RoundState.BLINDS;
-        this.blinds();
     }
 
     deal(): void {
@@ -93,7 +92,7 @@ export default class Round {
         }
         this.deck.burn();
         this.tableDeal(3);
-        this.state = RoundState.BETTING;
+        this.state = RoundState.FLOP_BETTING;
     }
 
     /**
@@ -105,7 +104,7 @@ export default class Round {
         }
         this.deck.burn();
         this.tableDeal();
-        this.state = RoundState.BETTING;
+        this.state = RoundState.TURN_BETTING;
     }
 
     /**
@@ -117,7 +116,7 @@ export default class Round {
         }
         this.deck.burn();
         this.tableDeal();
-        this.state = RoundState.BEST_HAND;
+        this.state = RoundState.RIVER_BETTING;
     }
 
     /**
@@ -163,8 +162,29 @@ export default class Round {
         player.chips = 0;
     }
 
+    // TODO: REFACTOR THIS IS JUST TO PASS THE TEST RIGHT NOW
     checkBets(): void {
+        for (let player of this.players.getAll()) {
+            if (this.players.state.get(player) === TurnState.WAITING) {
+                throw new Error(`Player ${player.name} has not placed any bet nor folded.`);
+            }
+        }
 
+        // Holy fuck what am I DOING
+        switch (this.state) {
+            case RoundState.BETTING:
+                this.state = RoundState.FLOP;
+                break;
+            case RoundState.FLOP_BETTING:
+                this.state = RoundState.TURN;
+                break;
+            case RoundState.TURN_BETTING:
+                this.state = RoundState.RIVER;
+                break;
+            case RoundState.RIVER_BETTING:
+                this.state = RoundState.BEST_HAND;
+                break;
+        }
     }
 
     /**
@@ -201,6 +221,8 @@ export default class Round {
                 return (valA > valB) ? 1 : -1;
             });
         }
+
+        this.state = RoundState.FINISHED;
         
         return competing.shift();
     }

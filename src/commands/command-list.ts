@@ -74,7 +74,7 @@ commands.set('call', (env): string => {
     }
     try {
         game.call(env.player);
-        game.next();
+        game.nextRound();
         return env.player.name + " called the bet.";
     } catch (err) {
         return err.message;
@@ -91,7 +91,7 @@ commands.set('check', (env): string => {
         return "";
     }
     try {
-        game.check(env.player);
+        game.currentRound.check(env.player);
         return env.player.name + " checks.";
     } catch (err) {
         return err.message;
