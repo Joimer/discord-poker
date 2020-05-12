@@ -1,5 +1,6 @@
 import Player from './player';
 import fisherYates from './shuffle/fisher-yates';
+import TurnState from './turn-state';
 
 export default class PlayerTable {
 
@@ -9,9 +10,13 @@ export default class PlayerTable {
     dealer: number = 0;
     smallBlind: number = 1;
     blind: number = 2;
+    state = new Map<Player, TurnState>();
 
     constructor(players: Array<Player>) {
         this.players = fisherYates(players);
+        for (let player of this.players) {
+            this.state.set(player, TurnState.WAITING);
+        }
     }
 
     private getPlayer(turn: number): Player {

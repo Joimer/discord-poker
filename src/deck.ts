@@ -13,6 +13,7 @@ export default class Deck {
     }
 
     shuffle(): void {
+        this.cards = this.cards.concat(this.pulled);
         this.cards = this.shuffleStrategy(this.cards);
     }
 

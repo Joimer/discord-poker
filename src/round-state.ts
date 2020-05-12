@@ -5,7 +5,9 @@ enum RoundState {
     BETTING,
     FLOP,
     TURN,
-    RIVER
+    RIVER,
+    BEST_HAND,
+    FINISHED
 }
 
 export default RoundState;
