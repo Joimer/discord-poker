@@ -216,6 +216,7 @@ export default class Round {
 
     /**
      * Gets the winner of the current hands.
+     * Players without chips are disqualified from the game.
      */
     calculateWinner(): void {
         let competing = new Array<Player>();
@@ -237,5 +238,12 @@ export default class Round {
         // Actually several can win a round and money has to be shared.
         // Implement pot -> player.
         this.winner = competing.shift();
+        for (let player of this.players.getAll()) {
+            if (player.chips === 0) {
+                // TODO this gets them out of the turn but should also get them out of the game actually.
+                // That should be managed in the game in the aftermatch of finishing a round and before creating a new one.
+                this.players.state.set(player, TurnState.OUT);
+            }
+        }
     }
 }

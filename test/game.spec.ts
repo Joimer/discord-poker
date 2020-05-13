@@ -108,6 +108,7 @@ describe('game class', () => {
         game.currentRound.start();
         expect(game.currentRound.playersInGame()).to.eql(7);
     });
+
     /* TODO:
     it('winner of the game', () => {
         const game = new Game(deck);
