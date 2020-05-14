@@ -53,6 +53,13 @@ export default class Game {
         }
     }
 
+    shufflePlayers(): void {
+        if (this.gameState === GameState.STARTED) {
+            throw new Error("Cannot shuffle players when the game has already started.");
+        }
+        this.playerTable.shufflePlayers();
+    }
+
     setReady(): void {
         if (this.gameState !== GameState.NOT_READY) {
             throw new Error("This game was already set ready!");

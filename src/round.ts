@@ -175,6 +175,7 @@ export default class Round {
 
     // TODO: REFACTOR THIS IS JUST TO PASS THE TEST RIGHT NOW
     checkBets(): void {
+        //console.log(this.players.state);
         for (let player of this.players.getAll()) {
             if (this.players.state.get(player) === TurnState.WAITING) {
                 throw new Error(`Player ${player.name} has not placed any bet nor folded.`);
@@ -245,5 +246,6 @@ export default class Round {
                 this.players.state.set(player, TurnState.OUT);
             }
         }
+        // TODO: Separate get winner from chips giving from disqualifying?
     }
 }

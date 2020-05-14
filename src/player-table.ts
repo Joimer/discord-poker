@@ -13,7 +13,7 @@ export default class PlayerTable {
     state = new Map<Player, TurnState>();
 
     constructor(players: Array<Player>) {
-        this.players = fisherYates(players);
+        this.players = players;
         for (let player of this.players) {
             this.state.set(player, TurnState.WAITING);
         }
@@ -21,6 +21,10 @@ export default class PlayerTable {
 
     private getPlayer(turn: number): Player {
         return this.players[turn];
+    }
+
+    shufflePlayers(): void {
+        this.players = fisherYates(this.players);
     }
 
     count(): number {
