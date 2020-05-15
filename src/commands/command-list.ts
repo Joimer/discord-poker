@@ -2,7 +2,7 @@ import Command from './command';
 import Game from '../game/game';
 import { getPokerDeck } from '../game/deck-factory';
 
-export const commands = new Map<string, Command>();
+const commands = new Map<string, Command>();
 
 // Create a new game
 commands.set('create', (env): string => {
@@ -19,13 +19,15 @@ commands.set('create', (env): string => {
 });
 
 function startGame(game: Game): string {
+    game.shufflePlayers();
     game.start();
     let res = "The game has started!"
-    + "\nPlay with the commands `call`, `raise`, `fold`."
+    + "\nPlay with the commands `check` (accept a bet), `call` (raise your bet to current bet),"
+    + " `raise [amount]` (raise bet to specified amount), `fold` (leave bet)."
     + "\nThe starting positions are: "
     + game.getDealer().name + " (dealer), "
     + game.getSmallBlind().name + " (small blind of "
-    + (game.blind / 2) + "), "
+    + Math.ceil(game.blind / 2) + "), "
     + game.getBlind().name + " (blind of " + game.blind + "), ";
     let players = [];
     for (let player of game.playerTable.getAll().slice(2)) {
@@ -57,9 +59,7 @@ commands.set('start', (env): string => {
     if (!game) {
         return "There's no game going on in this channel.";
     }
-    if (!game.isTheirTurn(env.player)) {
-        return "";
-    }
+
     return startGame(game);
 });
 
@@ -145,3 +145,5 @@ commands.set('raise', (env, content): string => {
 commands.set('forceend', (env, content): string => {
     return '';
 });*/
+
+export default commands;
