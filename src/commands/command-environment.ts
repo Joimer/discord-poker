@@ -1,5 +1,5 @@
-import Game from '../game';
-import Player from '../player';
+import Game from '../game/game';
+import Player from '../game/player';
 
 type CommandEnvironment = {player: Player, gameId: string, games: Map<string, Game>};
 

@@ -1,6 +1,6 @@
-import { orderCards, cardValue } from '../combinations';
-import Card from '../card';
-import CardSuit from '../card-suit';
+import { orderCards, cardValue } from '../game/combinations';
+import Card from '../game/card';
+import CardSuit from '../game/card-suit';
 
 /**
  * A royal flush is the card sequence A, K, Q, J, 10 all with the same suit.

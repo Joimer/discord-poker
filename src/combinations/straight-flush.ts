@@ -1,6 +1,6 @@
-import Card from '../card';
-import { orderCards, cardValue } from '../combinations';
-import CardSuit from '../card-suit';
+import Card from '../game/card';
+import { orderCards, cardValue } from '../game/combinations';
+import CardSuit from '../game/card-suit';
 
 /**
  * A straight flush is a list of cards ranked in order sharing the same suit.

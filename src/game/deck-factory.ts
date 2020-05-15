@@ -1,6 +1,6 @@
 import Deck from './deck';
 import Card from './card';
-import fisherYates from '../src/shuffle/fisher-yates';
+import fisherYates from '../shuffle/fisher-yates';
 import CardSuit from './card-suit';
 
 export function getPokerDeck(): Deck {

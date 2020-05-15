@@ -1,5 +1,5 @@
-import Card from '../card';
-import { orderCards } from '../combinations';
+import Card from '../game/card';
+import { orderCards } from '../game/combinations';
 
 export default function hasFullHouse(cards: Array<Card>): boolean {
     if (cards.length < 5) {

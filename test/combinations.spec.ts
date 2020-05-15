@@ -1,7 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
-import Card from '../src/card';
-import CardSuit from '../src/card-suit';
+import Card from '../src/game/card';
+import CardSuit from '../src/game/card-suit';
 import hasRoyalFlush from '../src/combinations/royal-flush';
 import getHighCard from '../src/combinations/high-card';
 import hasStraight from '../src/combinations/straight';

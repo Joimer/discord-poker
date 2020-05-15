@@ -1,5 +1,5 @@
 import Player from './player';
-import fisherYates from './shuffle/fisher-yates';
+import fisherYates from '../shuffle/fisher-yates';
 import TurnState from './turn-state';
 
 export default class PlayerTable {

@@ -1,5 +1,5 @@
 import Card from './card';
-import ShuffleStrategy from './shuffle/shuffle-strategy';
+import ShuffleStrategy from '../shuffle/shuffle-strategy';
 
 export default class Deck {
     cards: Array<Card>;

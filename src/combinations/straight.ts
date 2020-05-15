@@ -1,5 +1,5 @@
-import Card from '../card';
-import { orderCards, cardValue } from '../combinations';
+import Card from '../game/card';
+import { orderCards, cardValue } from '../game/combinations';
 
 /**
  * Straight is a five combination of cards ranked in order where the ace can be either 1 or 14.

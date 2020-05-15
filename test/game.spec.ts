@@ -1,11 +1,11 @@
 import 'mocha';
 import { expect } from 'chai';
-import Game from '../src/game';
-import { getPokerDeck } from '../src/deck-factory';
-import Player from '../src/player';
-import GameState from '../src/game-state';
-import RoundState from '../src/round-state';
-import CardSuit from '../src/card-suit';
+import Game from '../src/game/game';
+import { getPokerDeck } from '../src/game/deck-factory';
+import Player from '../src/game/player';
+import GameState from '../src/game/game-state';
+import RoundState from '../src/game/round-state';
+import CardSuit from '../src/game/card-suit';
 
 describe('game class', () => {
     const deck = getPokerDeck();

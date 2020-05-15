@@ -1,6 +1,6 @@
 import fs from 'fs';
-import { discordClient } from './discord-client';
-import Game from './game';
+import { discordClient } from './client/discord-client';
+import Game from './game/game';
 import Command from './commands/command';
 import path from 'path';
 

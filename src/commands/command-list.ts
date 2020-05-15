@@ -1,6 +1,6 @@
 import Command from './command';
-import Game from '../game';
-import { getPokerDeck } from '../deck-factory';
+import Game from '../game/game';
+import { getPokerDeck } from '../game/deck-factory';
 
 export const commands = new Map<string, Command>();
 

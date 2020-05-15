@@ -1,11 +1,11 @@
 import Card from "./card";
-import hasRoyalFlush from './combinations/royal-flush';
-import hasStraightFlush from './combinations/straight-flush';
-import hasAnyOfAKind from './combinations/any-of-a-kind';
-import hasFullHouse from './combinations/full-house';
-import hasFlush from './combinations/flush';
-import hasStraight from './combinations/straight';
-import hasTwoPair from './combinations/two-pair';
+import hasRoyalFlush from '../combinations/royal-flush';
+import hasStraightFlush from '../combinations/straight-flush';
+import hasAnyOfAKind from '../combinations/any-of-a-kind';
+import hasFullHouse from '../combinations/full-house';
+import hasFlush from '../combinations/flush';
+import hasStraight from '../combinations/straight';
+import hasTwoPair from '../combinations/two-pair';
 
 export const enum Combination {
     ROYAL_FLUSH,

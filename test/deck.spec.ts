@@ -1,9 +1,9 @@
 import 'mocha';
-import Deck from '../src/deck';
+import Deck from '../src/game/deck';
 import { expect } from 'chai';
-import Card from '../src/card';
+import Card from '../src/game/card';
 import fisherYates from '../src/shuffle/fisher-yates';
-import CardSuit from '../src/card-suit';
+import CardSuit from '../src/game/card-suit';
 
 describe('hasCards', () => {
 

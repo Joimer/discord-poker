@@ -1,5 +1,5 @@
-import Card from '../card';
-import CardSuit from '../card-suit';
+import Card from '../game/card';
+import CardSuit from '../game/card-suit';
 
 export default function hasFlush(cards: Array<Card>): boolean {
     if (cards.length < 5) {

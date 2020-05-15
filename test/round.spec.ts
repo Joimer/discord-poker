@@ -1,10 +1,10 @@
 import 'mocha';
 import { expect } from 'chai';
-import Round from '../src/round';
-import { getPokerDeck } from '../src/deck-factory';
-import PlayerTable from '../src/player-table';
-import Player from '../src/player';
-import RoundState from '../src/round-state';
+import Round from '../src/game/round';
+import { getPokerDeck } from '../src/game/deck-factory';
+import PlayerTable from '../src/game/player-table';
+import Player from '../src/game/player';
+import RoundState from '../src/game/round-state';
 
 describe('round', () => {
     const player1 = new Player('Hakurei Reimu');

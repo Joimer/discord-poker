@@ -1,5 +1,5 @@
-import Card from '../card';
-import { orderCards, cardValue } from '../combinations';
+import Card from '../game/card';
+import { orderCards, cardValue } from '../game/combinations';
 
 /**
  * Having two different pairs of repeating numbers.
