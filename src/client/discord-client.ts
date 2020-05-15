@@ -45,6 +45,9 @@ export const discordClient = (commands: Map<string, Function>, games: Map<string
                     return;
                 }
                 let result = command({player: player, gameId: gameId, games: games}, args[1]);
+                if (result === "") {
+                    return;
+                }
                 if (!result) {
                     result = "Something went wrong.";
                 }
