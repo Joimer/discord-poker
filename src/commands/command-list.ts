@@ -20,20 +20,26 @@ commands.set('create', (env): string => {
 
 function startGame(game: Game): string {
     game.shufflePlayers();
+    game.setReady();
     game.start();
     let res = "The game has started!"
     + "\nPlay with the commands `check` (accept a bet), `call` (raise your bet to current bet),"
     + " `raise [amount]` (raise bet to specified amount), `fold` (leave bet)."
-    + "\nThe starting positions are: "
-    + game.getDealer().name + " (dealer), "
-    + game.getSmallBlind().name + " (small blind of "
-    + Math.ceil(game.blind / 2) + "), "
-    + game.getBlind().name + " (blind of " + game.blind + "), ";
-    let players = [];
-    for (let player of game.playerTable.getAll().slice(2)) {
-        players.push(player.name);
+    + "\nThe starting positions are: **"
+    + game.getDealer().name + "** (dealer), **"
+    + game.getSmallBlind().name + "** (small blind of "
+    + Math.ceil(game.blind / 2) + "), **"
+    + game.getBlind().name + "** (blind of " + game.blind + ")";
+    const allPlayers = game.playerTable.getAll();
+    if (allPlayers.length > 2) {
+        res += ", **";
+        let players = [];
+        for (let player of allPlayers.slice(2)) {
+            players.push(player.name);
+        }
+        res += players.join('**, **') + "**";
     }
-    res += players.join(', ') + ".";
+    res += ".";
 
     return res;
 }
@@ -70,6 +76,7 @@ commands.set('call', (env): string => {
         return "There's no game going on in this channel.";
     }
     if (!game.isTheirTurn(env.player)) {
+        console.log("not " + env.player.name + "'s turn")
         return "";
     }
     try {
