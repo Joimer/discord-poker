@@ -2,10 +2,10 @@
   "name": "discord-poker",
   "version": "1.0.0",
   "description": "A bot to play Texas Hold 'em in Discord.",
-  "main": "app.js",
+  "main": "build/src/index.js",
   "repository": "https://github.com/Joimer/discord-poker",
   "scripts": {
-    "start": "npm run build && node build/index.js",
+    "start": "npm run build && node build/src/index.js",
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
     "build": "rimraf ./build && tsc"
   },

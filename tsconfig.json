@@ -7,7 +7,7 @@
       "esnext.asynciterable"
     ],
     "allowJs": true,
-    "outDir": "build",
+    "outDir": "./build",
     "rootDir": "./",
     "strict": true,
     "noImplicitAny": true,
@@ -26,8 +26,12 @@
     "noUnusedParameters": true,
     "removeComments": true,
   },
+  "include": [
+    "./src/**/*.ts"
+  ],
   "exclude": [
     "node_modules",
-    "build"
+    "build",
+    "test"
   ]
 }
