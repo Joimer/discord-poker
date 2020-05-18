@@ -1,6 +1,10 @@
 import Command from './command';
 import Game from '../game/game';
 import { getPokerDeck } from '../game/deck-factory';
+import CardSuit from '../game/card-suit';
+import GameState from '../game/game-state';
+import TurnState from '../game/turn-state';
+import CommandEnvironment from './command-environment';
 
 const commands = new Map<string, Command>();
 
@@ -39,9 +43,60 @@ function startGame(game: Game): string {
         }
         res += players.join('**, **') + "**";
     }
-    res += ".";
+    res += ".\n" + reportGameState(game);
 
     return res;
+}
+
+function reportGameState(game: Game): string {
+    let state = 'Round: ' + game.round + "\n"; 
+    state += 'Table: ';
+    let cards = [];
+    for (let card of game.currentRound.table) {
+        cards.push(`[${card.discriminator}` + suitToString(card.suit) + ']');
+    }
+    state += cards.join('') + "\n";
+    let players = [];
+    for (let [player, status] of game.currentRound.players.state) {
+        let p = `[${player.name}] Chips: ${player.chips}`;
+        p += ' State: ' + turnStateToString(status);
+        if (status !== TurnState.OUT) {
+            p += ` Bet: ${player.currentBet}`;
+        }
+        players.push(p);
+    }
+    state += players.join(', ');
+
+    return state;
+}
+
+// Eeeeeeh
+function suitToString(suit: CardSuit): string {
+    switch (suit) {
+        case CardSuit.CLOVER:
+            return ":four_leaf_clover:";
+        case CardSuit.DIAMOND:
+            return ":diamonds:";
+        case CardSuit.HEART:
+            return ":heart:";
+        case CardSuit.SPADES:
+            return ":spades:";
+    }
+}
+
+function turnStateToString(turnState: TurnState) {
+    switch (turnState) {
+        case TurnState.BET:
+            return "Betting";
+        case TurnState.BET_LOWER:
+            return "Betting (below)";
+        case TurnState.FOLDED:
+            return "Folded";
+        case TurnState.OUT:
+            return "Out of the game";
+        case TurnState.WAITING:
+            return "Waiting turn";
+    }
 }
 
 // Join an existing game
@@ -81,8 +136,8 @@ commands.set('call', (env): string => {
     }
     try {
         game.call(env.player);
-        game.nextRound();
-        return env.player.name + " called the bet.";
+        game.next();
+        return env.player.name + " called the bet.\n" + reportGameState(game);
     } catch (err) {
         return err.message;
     }
@@ -99,7 +154,8 @@ commands.set('check', (env): string => {
     }
     try {
         game.currentRound.check(env.player);
-        return env.player.name + " checks.";
+        game.next();
+        return env.player.name + " checks.\n" + reportGameState(game);
     } catch (err) {
         return err.message;
     }
@@ -116,7 +172,8 @@ commands.set('fold', (env): string => {
     }
     try {
         game.fold(env.player);
-        return env.player.name + " folds.";
+        game.next();
+        return env.player.name + " folds.\n" + reportGameState(game);
     } catch (err) {
         return err.message;
     }
@@ -141,10 +198,24 @@ commands.set('raise', (env, content): string => {
     }
     try {
         game.raise(env.player, amount);
-        return env.player.name + ` raised to ${amount}.`;
+        game.next();
+        return env.player.name + ` raised to ${amount}.` + "\n" + reportGameState(game);
     } catch (err) {
         return err.message;
     }
+});
+
+// Ask for your current hand
+commands.set('hand', (env: CommandEnvironment): string => {
+    let game = env.games.get(env.gameId);
+    if (!game) {
+        return "There's no game going on in this channel.";
+    }
+
+    // Send private message
+    env.discordUser.send("");
+
+    return "";
 });
 
 // Force end the game

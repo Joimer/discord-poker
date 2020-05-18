@@ -76,7 +76,10 @@ export default class Game {
     }
 
     isTheirTurn(player: Player): boolean {
-        return this.currentRound.isTheirTurn(player);
+        // for debug
+        player = this.currentRound.currentPlay? this.currentRound.currentPlay : player;
+        return true;
+        //return this.currentRound.isTheirTurn(player);
     }
 
     start(): void {
@@ -89,6 +92,10 @@ export default class Game {
         this.gameState = GameState.STARTED;
         this.currentRound.start();
         this.round = 1;
+    }
+
+    next(): void {
+        this.currentRound.next();
     }
 
     nextRound(): void {

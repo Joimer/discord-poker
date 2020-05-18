@@ -3,6 +3,9 @@ import * as config from '../config.json';
 import Game from '../game/game';
 import Player from '../game/player';
 
+// Player is decoupled from Discord, keep track of discord id to player which is more reliable than name.
+const discordIdToPlayer = new Map<string, Player>();
+
 // This limits the game to one game per channel per guild.
 function generateGameId(message: Message): string {
     return message.guild + ':' + message.channel;
@@ -36,7 +39,11 @@ export const discordClient = (commands: Map<string, Function>, games: Map<string
 
         const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
         const gameId = generateGameId(message);
-        const player = new Player(message.author.username);
+        let player = discordIdToPlayer.get(message.author.id);
+        if (!player) {
+            player = new Player(message.author.username);
+            discordIdToPlayer.set(message.author.id, player);
+        }
 
         if (commands.has(args[0])) {
             try {
@@ -44,7 +51,7 @@ export const discordClient = (commands: Map<string, Function>, games: Map<string
                 if (!command) {
                     return;
                 }
-                let result = command({player: player, gameId: gameId, games: games}, args[1]);
+                let result = command({player: player, gameId: gameId, games: games, discordUser: message.author}, args[1]);
                 if (result === "") {
                     return;
                 }
