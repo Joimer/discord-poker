@@ -48,9 +48,16 @@ export default class Round {
         return this.currentPlay === player;
     }
 
+    /**
+     * Next player in table.
+     */
     next(): void {
         this.players.nextTurn();
         this.currentPlay = this.players.getCurrentPlayer();
+    }
+
+    isLastPlayer(): boolean {
+        return this.players.isLastPlayer();
     }
 
     /**
@@ -174,13 +181,24 @@ export default class Round {
     }
 
     // TODO: REFACTOR THIS IS JUST TO PASS THE TEST RIGHT NOW
+    /**
+     * Checks the bets and updates turn state accordingly.
+     */
     checkBets(): void {
-        //console.log(this.players.state);
         for (let player of this.players.getAll()) {
             if (this.players.state.get(player) === TurnState.WAITING) {
                 throw new Error(`Player ${player.name} has not placed any bet nor folded.`);
             }
         }
+
+        // Check if everyone but one player has folded
+        if (this.playersInGame() === 1) {
+            this.calculateWinner();
+            this.state = RoundState.FINISHED;
+            return;
+        }
+
+
 
         // Holy fuck what am I DOING
         switch (this.state) {

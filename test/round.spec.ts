@@ -55,8 +55,10 @@ describe('round', () => {
         round.check(player6);
         round.check(player7);
         round.raise(player8, 500);
+        // Here the current bet is risen to 500 from the default blind of 20.
+        // The round shouldn't advance state, but continue on betting on the hole cards.
         round.checkBets();
-        expect(round.state).to.eql(RoundState.FLOP);
+        expect(round.state).to.eql(RoundState.BETTING);
     });
 
     it('should play a full round', () => {

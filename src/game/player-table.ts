@@ -44,12 +44,14 @@ export default class PlayerTable {
         if (this.players.length < 2) {
             throw new Error('Not enough players to prepare a table!');
         }
+
         // If there are 2 players only, the dealer is the blind too.
         // Also the game is started by smallBlind.
         if (this.players.length === 2) {
             this.blind = 0;
             this.turn = 1;
         }
+
         // With 3 players, the dealer starts. 
         if (this.players.length === 3) {
             this.turn = 0;
@@ -77,6 +79,10 @@ export default class PlayerTable {
         this.smallBlind = this.increaseTurn(this.smallBlind);
         this.blind = this.increaseTurn(this.blind);
         this.turn = this.increaseTurn(this.turn);
+    }
+
+    isLastPlayer(): boolean {
+        return this.turn === this.players.length;
     }
 
     private increaseTurn(turn: number): number {
