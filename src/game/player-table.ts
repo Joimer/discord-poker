@@ -5,6 +5,7 @@ import TurnState from './turn-state';
 export default class PlayerTable {
 
     private players: Array<Player>;
+    private playersOut = new Array<Player>();
     // Turn is the player that has to pick an action.
     turn: number = 3;
     dealer: number = 0;
@@ -91,5 +92,12 @@ export default class PlayerTable {
             turn = 0;
         }
         return turn;
+    }
+
+    takePlayerOut(player: Player): void {
+        console.log("taking player down");
+        console.log(player);
+        const po = this.players.filter(p => p === player);
+        this.playersOut.concat(po);
     }
 }

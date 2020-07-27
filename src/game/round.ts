@@ -18,11 +18,13 @@ export default class Round {
     blind: number = 0;
     currentHighestBet: number = 0;
     allinQuantity: number = 0;
+    playersInPlay: number = 0;
 
     constructor(players: PlayerTable, deck: Deck, blind: number) {
         this.players = players;
         this.deck = deck;
         this.blind = blind;
+        this.playersInPlay = players.count();
     }
 
     start(): void {
@@ -147,7 +149,7 @@ export default class Round {
         }
         player.currentBet += quantity;
         player.chips -= quantity;
-        this.players.state.set(player, TurnState.BET);
+        this.players.state.set(player, TurnState.BET_RAISE);
     }
 
     /**
@@ -167,6 +169,7 @@ export default class Round {
         this.pot += player.currentBet;
         player.currentBet = 0;
         this.players.state.set(player, TurnState.FOLDED);
+        this.playersInPlay--;
     }
 
     /**
@@ -185,12 +188,6 @@ export default class Round {
      * Checks the bets and updates turn state accordingly.
      */
     checkBets(): void {
-        for (let player of this.players.getAll()) {
-            if (this.players.state.get(player) === TurnState.WAITING) {
-                throw new Error(`Player ${player.name} has not placed any bet nor folded.`);
-            }
-        }
-
         // Check if everyone but one player has folded
         if (this.playersInGame() === 1) {
             this.calculateWinner();
@@ -198,7 +195,21 @@ export default class Round {
             return;
         }
 
+        let betRisen = false;
+        for (let player of this.players.getAll()) {
+            if (this.players.state.get(player) === TurnState.WAITING) {
+                throw new Error(`Player ${player.name} has not placed any bet nor folded.`);
+            }
+            // If during betting there was any raise, the betting round continues.
+            if (this.players.state.get(player) === TurnState.BET_RAISE) {
+                betRisen = true;
+                continue;
+            }
+        }
 
+        if (betRisen) {
+            return;
+        }
 
         // Holy fuck what am I DOING
         switch (this.state) {
@@ -221,16 +232,7 @@ export default class Round {
      * Number of active players in the round.
      */
     playersInGame(): number {
-        let psin = 0;
-        for (let player of this.players.getAll()) {
-            // Folded means he gave up on the round, out means the player has no chips to play with and is out of the game.
-            if (this.players.state.get(player) !== TurnState.OUT
-            && this.players.state.get(player) !== TurnState.FOLDED) {
-                psin++;
-            }
-        }
-
-        return psin;
+        return this.playersInPlay;
     }
 
     /**
@@ -262,6 +264,8 @@ export default class Round {
                 // TODO this gets them out of the turn but should also get them out of the game actually.
                 // That should be managed in the game in the aftermatch of finishing a round and before creating a new one.
                 this.players.state.set(player, TurnState.OUT);
+                this.playersInPlay--;
+                this.players.takePlayerOut(player);
             }
         }
         // TODO: Separate get winner from chips giving from disqualifying?

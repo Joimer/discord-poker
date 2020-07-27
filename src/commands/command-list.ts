@@ -2,7 +2,6 @@ import Command from './command';
 import Game from '../game/game';
 import { getPokerDeck } from '../game/deck-factory';
 import CardSuit from '../game/card-suit';
-import GameState from '../game/game-state';
 import TurnState from '../game/turn-state';
 import CommandEnvironment from './command-environment';
 

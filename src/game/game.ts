@@ -151,6 +151,14 @@ export default class Game {
         }
     }
 
+    startNewRound() {
+        this.currentRound.start();
+    }
+
+    calculateRoundWinner() {
+        this.currentRound.calculateWinner();
+    }
+
     finish(): void {
         // TODO or to delete idk yet
     }

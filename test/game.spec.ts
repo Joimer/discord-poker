@@ -94,6 +94,7 @@ describe('game class', () => {
         let b = game.getBlind();
         game.currentRound.blinds();
         game.currentRound.hole();
+        // All players call the bet and player blind goes all in and loses.
         for (let player of allPlayers) {
             if (player !== b) {
                 // Technically impossible, but the game and round state do not check deck sanity.
@@ -103,9 +104,9 @@ describe('game class', () => {
         }
         game.allin(b);
         b.hand = [{suit: CardSuit.CLOVER, discriminator: '2'}, {suit: CardSuit.SPADES, discriminator: '4'}];
-        game.currentRound.calculateWinner();
+        game.calculateRoundWinner();
         game.nextRound();
-        game.currentRound.start();
+        game.startNewRound();
         expect(game.currentRound.playersInGame()).to.eql(7);
     });
 

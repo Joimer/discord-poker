@@ -5,6 +5,7 @@ import { getPokerDeck } from '../src/game/deck-factory';
 import PlayerTable from '../src/game/player-table';
 import Player from '../src/game/player';
 import RoundState from '../src/game/round-state';
+import TurnState from '../src/game/turn-state';
 
 describe('round', () => {
     const player1 = new Player('Hakurei Reimu');
@@ -57,6 +58,7 @@ describe('round', () => {
         round.raise(player8, 500);
         // Here the current bet is risen to 500 from the default blind of 20.
         // The round shouldn't advance state, but continue on betting on the hole cards.
+        expect(round.players.state.get(player8)).to.eql(TurnState.BET_RAISE);
         round.checkBets();
         expect(round.state).to.eql(RoundState.BETTING);
     });
