@@ -21,7 +21,7 @@ export const discordClient = (commands: Map<string, Function>, games: Map<string
 
     client.on("guildCreate", guild => {
         // This event triggers when the bot joins a guild.
-        console.log(`New "noUnusedParameters": true,guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
+        console.log(`guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
     });
 
     client.on("guildDelete", guild => {
